@@ -10,7 +10,7 @@
 /**
  * @file camera_stream.hpp
  * @brief Declaration of CameraStreamer class for capturing and publishing camera frames in ROS2.
- * @author 
+ * @author yuya
  * @date 2025-04-18
  */
 
