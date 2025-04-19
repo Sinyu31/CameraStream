@@ -43,6 +43,7 @@ void CameraStreamer::InitializeComponents() noexcept{
     if(cap_.isOpened()){
         cap_.set(cv::CAP_PROP_FRAME_WIDTH, 640);
         cap_.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
+        cap_.set(cv::CAP_PROP_FPS, 30);
         cvImage_.encoding = "bgr8";
     }
     else{
