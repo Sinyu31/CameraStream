@@ -1,6 +1,7 @@
 #ifndef LMP_PROJECT_CAMERA_STREAM_HPP
 #define LMP_PROJECT_CAMERA_STREAM_HPP
 
+#include"node_interruption_token.hpp"
 #include<rclcpp/rclcpp.hpp>
 #include<sensor_msgs/msg/image.hpp>
 #include<cv_bridge/cv_bridge.h>
@@ -15,12 +16,20 @@
  */
 
 
+/// @brief frame prop
+
+constexpr int FrameWidth = 320;
+constexpr int FrameHeight = 240;
+constexpr int Fps = 30;
+
 /// @class CameraStreamer
 /// @brief Get camera stream from robot and publish ROS2 image message
 ///
 /// This class captures video from a camera device using OpenCV
 /// converts frames into sensor_msgs::msg::Image using cv_bridge,
 /// and publishes them to a ROS2 topic.
+/// If Suspend Message Required, capture is release
+/// If Resume Message Required, capture is open
 
 class CameraStreamer : public rclcpp::Node{
 private:
@@ -37,41 +46,22 @@ public:
     );
 
     ~CameraStreamer();
+        
+    [[nodiscard]] static std::shared_ptr<CameraStreamer>  Create() noexcept;
     
-    /// @brief Create a shared CameraStreamer instance with default options.
-    /// @return Shared pointer to CameraStreamer instance
-    
-    static std::shared_ptr<CameraStreamer>  Create() noexcept;
-
-    /// @brief Create a shared CameraStreamer instance with custom node options.
-    /// @param nodeOptions NodeOptions to configure the node.
-    /// @return Shared pointer to CameraStreamer instance
-    
-    static std::shared_ptr<CameraStreamer>  Create(
+    [[nodiscard]]  static std::shared_ptr<CameraStreamer>  Create(
         const rclcpp::NodeOptions& nodeOptions
     ) noexcept;
 
-    /// @brief Create a shared CameraStreamer instance with namespace and custom options.
-    /// @param nameSpace   namespace for the  node
-    /// @param nodeOptions NodeOptions to configure the node
-    /// @return Shared pointer to cameraStreamer instance
-    
-    
-    static std::shared_ptr<CameraStreamer>  Create(
+    [[nodiscard]] static std::shared_ptr<CameraStreamer>  Create(
         const std::string& nameSpace,
         const rclcpp::NodeOptions& nodeOptions
     ) noexcept;
 
 private:
+    void SetCaptureProp(int width, int height, int fps) noexcept;
 
-    /// @brief Initialize camera and ROS publisher components.
-    /// 
-    /// Opens the video capture, sets camera parameters, and prepares the image publisher and timer.
-    /// If Camera is not opened, Node is shutdwon
-    
-    inline void InitializeComponents() noexcept;
-
-    /// @brief Callback Function
+    void InitializeComponents() noexcept;
 
     void OnUpdate();
 
@@ -82,6 +72,7 @@ private:
     ImageMessage::SharedPtr cameraImage_; 
     cv_bridge::CvImage cvImage_;
 
+    NodeInterruptionToken token_;
 };
 
 #endif //LMP_PROJECT_CAMERA_STREAM_HPP 

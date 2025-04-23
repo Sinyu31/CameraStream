@@ -16,6 +16,7 @@ find_package(OpenCV REQUIRED)
 add_executable(image_view 
   src/main.cpp
   src/camera_stream.cpp
+  src/node_interruption_token.cpp
 )
 
 target_compile_features(image_view PUBLIC cxx_std_17)
