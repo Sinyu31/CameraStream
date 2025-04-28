@@ -9,7 +9,7 @@ NodeInterruptionToken::NodeInterruptionToken(
         topicName,
         rclcpp::SystemDefaultsQoS(),
         std::bind(
-            &NodeInterruptionToken::OnOperationMessageRecieved,
+            &NodeInterruptionToken::OnOperationMessageReceived,
             this,
             std::placeholders::_1
         )
@@ -37,7 +37,7 @@ void NodeInterruptionToken::Register(Action action, Status state) noexcept{
 }
 
 
-void NodeInterruptionToken::OnOperationMessageRecieved(
+void NodeInterruptionToken::OnOperationMessageReceived(
     OperationMessage::SharedPtr message
 ){
     Status operationCode = static_cast<Status>(message->data);
