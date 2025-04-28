@@ -39,7 +39,7 @@ public:
     void Register(Action action, Status state) noexcept;
 
 private:
-    void OnOperationMessageRecieved(
+    void OnOperationMessageReceived(
         OperationMessage::SharedPtr message
     );
 
