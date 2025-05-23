@@ -37,7 +37,7 @@ std::shared_ptr<CameraStreamer> CameraStreamer::Create(
 }
 
 void CameraStreamer::InitializeComponents() noexcept{    
-    cap_.open(0);
+    cap_.open(0, cv::CAP_V4L2);
     
     if(cap_.isOpened()){
         SetCaptureProp(FrameWidth, FrameHeight, Fps);
@@ -76,7 +76,7 @@ void CameraStreamer::InitializeComponents() noexcept{
         if(token_.IsResumptionRequested() && !cap_.isOpened()){
             
             //cap reopen and set prop, this code is may be overhead
-            cap_.open(0);
+            cap_.open(0, cv::CAP_V4L2);
             SetCaptureProp(FrameWidth, FrameHeight, Fps);
             std::this_thread::sleep_for(std::chrono::milliseconds(30));
         }   
